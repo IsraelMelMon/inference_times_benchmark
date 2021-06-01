@@ -95,6 +95,8 @@ if __name__ == '__main__':
     height = input_details[0]['shape'][1]
     width = input_details[0]['shape'][2]
     result_confirm = []
+    time_avg = []
+
     for img in list_f:
         img = Image.open(args.folder+img).resize((width, height))
 
@@ -124,6 +126,11 @@ if __name__ == '__main__':
             else:
                 print('{:08.6f}: {}'.format(float(results[i] / 255.0), labels[i]))
 
-        print('time: {:.3f}ms'.format((stop_time - start_time) * 1000+17))
+        time_ms = (stop_time - start_time) * 1000
+        print('time: {:.3f}ms'.format(time_ms))
+
+        time_avg.append(time_ms)
+        
 
     print("Total errors: {}".format(sum(result_confirm)))
+    print("Avg. time inference: {:.3f}ms".format(time_avg(sum)/len(time_avg)))
