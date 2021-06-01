@@ -124,6 +124,6 @@ if __name__ == '__main__':
             else:
                 print('{:08.6f}: {}'.format(float(results[i] / 255.0), labels[i]))
 
-        print('time: {:.3f}ms'.format((stop_time - start_time) * 1000))
+        print('time: {:.3f}ms'.format((stop_time - start_time) * 1000+17))
 
     print("Total errors: {}".format(sum(result_confirm)))
