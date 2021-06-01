@@ -133,4 +133,4 @@ if __name__ == '__main__':
         
 
     print("Total errors: {}".format(sum(result_confirm)))
-    print("Avg. time inference: {:.3f}ms".format(time_avg(sum)/len(time_avg)))
+    print("Avg. time inference: {:.3f}ms".format(sum(time_avg)/len(time_avg)))
