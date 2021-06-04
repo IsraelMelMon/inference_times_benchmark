@@ -1,7 +1,4 @@
 
-
-#model = tf.keras.models.load_model('rochin_model_grape_fine_tuned')
-#model.summary()
 # Copyright 2018 The TensorFlow Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,11 +26,8 @@ import time
 
 import numpy as np
 from PIL import Image
-
 import tensorflow as tf # TF2
 import cv2
-
-from create_bounding_boxes_classic import draw_bounding_boxes
 
 
 def load_labels(filename):
@@ -46,37 +40,20 @@ def lite_model(images):
     interpreter.invoke()
     return interpreter.get_tensor(interpreter.get_output_details()[0]['index'])
 
-def initialize_model(model_file):
-
-    interpreter = tf.lite.Interpreter(
-    model_path=model_file, num_threads=8)
-
-    interpreter.allocate_tensors()
-
-    input_details = interpreter.get_input_details()
-    output_details = interpreter.get_output_details()
-
-    # check the type of the input tensor
-    floating_model = input_details[0]['dtype'] == np.float32
-
-    # NxHxWxC, H:1, W:2
-    height = input_details[0]['shape'][1]
-    width = input_details[0]['shape'][2]
-
-    return width, height, interpreter, floating_model, input_details, output_details
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
+        '-f','--folder', type=str, help='folder of images to infer over')
+    parser.add_argument(
         '-m',
         '--model_file',
-        default='/models/mobilenet_v1_1.0_224_quant.tflite',
+        default='models/lite_bi_rochin_2_tomate_grape_color.tflite',
         help='.tflite model to be executed')
     parser.add_argument(
         '-l',
         '--label_file',
-        default='/class_labels.txt',
+        default='class_labels.txt',
         help='name of file containing labels')
     parser.add_argument(
         '--input_mean',
@@ -87,16 +64,15 @@ if __name__ == '__main__':
         default=255.0, type=float,
         help='input standard deviation')
     parser.add_argument(
-        '--num_threads', default=None, type=int, help='number of threads')
-    parser.add_argument(
-        '-f','--folder', type=str, help='nfolder of images to infer over')
+        '--num_threads', default=8, type=int, help='number of threads')
+
     args = parser.parse_args()
 
     list_f = os.listdir(args.folder)
     list_f = [files for files in list_f if files!=".DS_Store"]
 
     interpreter = tf.lite.Interpreter(
-    model_path=args.model_file, num_threads=8)
+    model_path=args.model_file, num_threads=args.num_threads)
 
     interpreter.allocate_tensors()
 
@@ -130,9 +106,9 @@ if __name__ == '__main__':
         output_data = interpreter.get_tensor(output_details[0]['index'])
         results = np.squeeze(output_data)
         print(results)
-        if results[0] > results[1]:
-            result_confirm.append(1)
-        #top_k = results.argsort()[-2:][::-1]
+        """if results[0] > results[1]:
+            result_confirm.append(1)"""
+
         top_k = results.argsort()[:][::-1]
         labels = load_labels(args.label_file)
         for i in top_k:
@@ -147,5 +123,5 @@ if __name__ == '__main__':
         time_avg.append(time_ms)
         
 
-    print("Total errors: {}".format(sum(result_confirm)))
+    """print("Total errors: {}".format(sum(result_confirm)))"""
     print("Avg. time inference: {:.3f}ms".format(sum(time_avg)/len(time_avg)))
