@@ -44,7 +44,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        '-f','--folder', type=str, help='folder of images to infer over')
+        '-f','--folder', default="2Xcrops_tomate_grape/PRIMERA/", 
+        type=str, help='folder of images to infer over')
     parser.add_argument(
         '-m',
         '--model_file',
