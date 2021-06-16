@@ -44,7 +44,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        '-f','--folder', type=str, help='folder of images to infer over')
+        '-f','--folder', default = "2Xcrops_tomate_grape/PRIMERA/",
+        type=str, help='folder of images to infer over')
     parser.add_argument(
         '-m',
         '--model_file',
@@ -64,7 +65,7 @@ if __name__ == '__main__':
         default=255.0, type=float,
         help='input standard deviation')
     parser.add_argument(
-        '--num_threads', default=8, type=int, help='number of threads')
+        '--num_threads', default=16, type=int, help='number of threads')
 
     args = parser.parse_args()
 

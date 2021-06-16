@@ -87,7 +87,7 @@ if __name__ == '__main__':
         default=255.0, type=float,
         help='input standard deviation')
     parser.add_argument(
-        '--num_threads', default=None, type=int, help='number of threads')
+        '--num_threads', default=16, type=int, help='number of threads')
     parser.add_argument(
         '-f','--folder', type=str, help='nfolder of images to infer over')
     args = parser.parse_args()
@@ -96,7 +96,7 @@ if __name__ == '__main__':
     list_f = [files for files in list_f if files!=".DS_Store"]
 
     interpreter = tf.lite.Interpreter(
-    model_path=args.model_file, num_threads=8)
+    model_path=args.model_file, num_threads=args.num_threads)
 
     interpreter.allocate_tensors()
 

@@ -29,7 +29,7 @@ import numpy as np
 def initialize_model(model_file):
 
     interpreter = tf.lite.Interpreter(
-    model_path=model_file, num_threads=8)
+    model_path=model_file, num_threads=16)
 
     interpreter.allocate_tensors()
 
@@ -165,7 +165,7 @@ def draw_bounding_boxes(i, img, output_folder, input_folder,
 if __name__=="__main__":
 
     ap = argparse.ArgumentParser()
-    ap.add_argument("-i", "--input", required=True,
+    ap.add_argument("-i", "--input", required=False, default="primera_s_d_copy/",
         help="path to input image folder to count tomatoes")
 
     ap.add_argument("-o", "--output", required=False, default="outputs",
